@@ -1,0 +1,342 @@
+public String printMapTAB() {
+        String map = "";
+
+        for (int index = 0; index < mapX; index++) {
+            map += "______";
+        }
+        BufferedImage img = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = img.createGraphics();
+        Font font = new Font("Monospaced", Font.PLAIN, 12);
+        g2d.setFont(font);
+        FontMetrics fm = g2d.getFontMetrics();
+        int width = fm.stringWidth(map);
+        int height = fm.getHeight();
+        g2d.dispose();
+        img = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        g2d = img.createGraphics();
+        g2d.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+        g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
+        g2d.setRenderingHint(RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_ENABLE);
+        g2d.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+        g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        g2d.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+        g2d.setFont(font);
+        fm = g2d.getFontMetrics();
+        g2d.setColor(Color.WHITE);
+        g2d.drawString(map, 0, fm.getAscent());
+        g2d.dispose();
+        try {
+            ImageIO.write(img, "png", new File("img/map/map"+0+".png"));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        map += '\n';
+
+        for (int indey = 0; indey < mapY; indey++) {
+            map = "";
+            String eAndW = "|";
+            for (int index = 0; index < mapX; index++) {
+                if (rooms[index][indey].isADoor.get(Direction.EAST)) {
+                    if (rooms[index][indey].isADoor.get(Direction.SOUTH)) {
+                        eAndW += "_   __";
+                    } else {
+                        eAndW += "______";
+    
+                    }
+
+                } else {
+                    if (rooms[index][indey].isADoor.get(Direction.SOUTH)) {
+                        eAndW += "_   _|";
+                    } else {
+                        eAndW += "_____|";
+    
+                    }
+                }
+            }
+            map += eAndW + '\n';
+            /*
+           Because font metrics is based on a graphics context, we need to create
+           a small, temporary image so we can ascertain the width and height
+           of the final image
+         */
+        
+        BufferedImage img1 = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d1 = img1.createGraphics();
+        Font font1 = new Font("Monospaced", Font.PLAIN, 12);
+        g2d1.setFont(font1);
+        FontMetrics fm1 = g2d1.getFontMetrics();
+        int width1 = fm1.stringWidth(map);
+        int height1 = fm1.getHeight();
+        g2d1.dispose();
+        img1 = new BufferedImage(width1, height1, BufferedImage.TYPE_INT_ARGB);
+        g2d1 = img1.createGraphics();
+        g2d1.setRenderingHint(RenderingHints.KEY_ALPHA_INTERPOLATION, RenderingHints.VALUE_ALPHA_INTERPOLATION_QUALITY);
+        g2d1.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g2d1.setRenderingHint(RenderingHints.KEY_COLOR_RENDERING, RenderingHints.VALUE_COLOR_RENDER_QUALITY);
+        g2d1.setRenderingHint(RenderingHints.KEY_DITHERING, RenderingHints.VALUE_DITHER_ENABLE);
+        g2d1.setRenderingHint(RenderingHints.KEY_FRACTIONALMETRICS, RenderingHints.VALUE_FRACTIONALMETRICS_ON);
+        g2d1.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+        g2d1.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        g2d1.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+        g2d1.setFont(font1);
+        fm1 = g2d1.getFontMetrics();
+        g2d1.setColor(Color.WHITE);
+        g2d1.drawString(map, 0, fm1.getAscent());
+        g2d1.dispose();
+        try {
+            ImageIO.write(img1, "png", new File("img/map/map"+(indey+1)+".png"));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        }
+
+        return map;
+
+    }
+
+
+
+    public void mapWithImage() throws FileNotFoundException {
+        view.app.map.printMapTAB();
+        for (int i = 0; i < view.app.map.mapY + 1; i++) {
+            FileInputStream inputstreamBG = new FileInputStream("img/map/map" + i + ".png");
+            Image wall = new Image(inputstreamBG);
+            ImageView imageViewWall = new ImageView();
+            imageViewWall.setImage(wall);
+            imageViewWall.setX(2 * canvasWidth / 4);
+            imageViewWall.setY(canvasHeight / 10 + i * 30);
+            imageViewWall.setFitHeight(30);
+            imageViewWall.setPreserveRatio(true);
+
+            view.app.root.getChildren().add(imageViewWall);
+
+        }
+
+    }
+
+
+    private void removeAllObject1() {
+        if(app.root.getChildren().get(0) instanceof ImageView){
+            app.root.getChildren().remove(0, 4);
+        }
+
+
+    }
+
+
+            /* public Enemy() {
+
+        randomHp();
+        randomAtk();
+        
+    }
+
+    public void randomHp() {
+        Random randomHp = new Random();
+        this.hp = 50 + randomHp.nextInt(50);
+    }
+
+    public void randomAtk() {
+        Random randomAtk = new Random();
+        this.atk = 5 + randomAtk.nextInt(10);
+    }
+
+    public void imageUrl(){
+        if(atk >= 10){
+            this.imageUrl = "img/playerModel/luffyPM5.png";
+
+        }else if (atk>=5){
+            this.imageUrl = "img/playerModel/luffyPM4.png";
+
+        }else{
+            this.imageUrl = "img/playerModel/luffyPM3.png";
+        }
+    } */
+
+
+
+    /* public static ImageView initializeAtkItem( JavaFXView view) throws FileNotFoundException {
+        FileInputStream inputstreamBG = new FileInputStream(
+                "img/item/heal" + 2 + ".png");
+        Image atk = new Image(inputstreamBG);
+        ImageView imageViewAtk = view.atkImage;
+        imageViewAtk.setImage(atk);
+        imageViewAtk.setX(App.canvasWidth / 2 + 100);
+        imageViewAtk.setY(App.canvasHeight - 200);
+        imageViewAtk.setFitHeight(100);
+        imageViewAtk.setFitWidth(100);
+        imageViewAtk.setPreserveRatio(false);
+        return imageViewAtk;
+
+    } */
+
+
+    public static ImageView initializeHealItem(JavaFXView view) throws FileNotFoundException {
+        FileInputStream inputstreamBG = new FileInputStream(
+                "img/item/heal" + 1 + ".png");
+        Image heal = new Image(inputstreamBG);
+        ImageView imageViewHeal = view.healImage;
+        imageViewHeal.setImage(heal);
+        imageViewHeal.setX(App.canvasWidth / 2 - 100);
+        imageViewHeal.setY(App.canvasHeight - 200);
+        imageViewHeal.setFitHeight(100);
+        imageViewHeal.setFitWidth(100);
+        imageViewHeal.setPreserveRatio(false);
+        return imageViewHeal;
+
+    }
+
+
+
+    /* private void generateMap() {
+        initializeBorder();
+        for (int indexY = 1; indexY < mapY; indexY++) {
+            for (int indexX = 1; indexX < mapX; indexX++) {
+                HashMap<Direction, Boolean> isADoor = new HashMap<>();
+                isADoor.put(Direction.NORTH, false);
+                isADoor.put(Direction.WEST, false);
+                if (rooms[indexX][indexY - 1].isSouthDoor()) {
+                    isADoor.put(Direction.NORTH, true);
+
+                }
+                if (rooms[indexX - 1][indexY].isEastDoor()) {
+                    isADoor.put(Direction.WEST, true);
+
+                }
+                Random random = new Random();
+                Boolean randomBool = random.nextBoolean();
+                if (randomBool) {
+                    isADoor.put(Direction.EAST, true);
+                    isADoor.put(Direction.SOUTH, new Random().nextBoolean());
+                } else {
+                    isADoor.put(Direction.EAST, new Random().nextBoolean());
+                    isADoor.put(Direction.SOUTH, true);
+                }
+
+                if (indexX == mapX - 1) {
+                    isADoor.put(Direction.EAST, false);
+                    isADoor.put(Direction.SOUTH, true);
+                }
+                if (indexY == mapY - 1) {
+                    isADoor.put(Direction.SOUTH, false);
+                    isADoor.put(Direction.EAST, true);
+                }
+                if (indexY == mapY - 1 && indexX == mapX - 1) {
+                    isADoor.put(Direction.SOUTH, false);
+                    isADoor.put(Direction.EAST, false);
+                }
+                rooms[indexX][indexY] = new Room(isADoor);
+            }
+        }
+
+    } */
+
+
+
+
+     /* public ArrayList<ImageView> createImageViews() throws FileNotFoundException{
+        ArrayList<ImageView> imageViews = new ArrayList<ImageView>();
+        if(isNorthDoor()){
+            imageViews.add(new Door().initializeDoor( (int) App.canvasWidth / 2 - 50, 0));
+        }else{
+            imageViews.add(new Wall().initializeWalltop( 0, 0, (int) App.canvasWidth, 50));
+        }
+
+        if(isEastDoor()){
+            imageViews.add(new Door().initializeDoor( (int) App.canvasWidth - 100, (int) App.canvasHeight / 2));
+        }else{
+            imageViews.add(new Wall().initializeWall( (int) App.canvasWidth - 50, 0, 50, (int) App.canvasHeight));
+            
+        }
+        if(isSouthDoor()){
+            imageViews.add(new Door().initializeDoor( (int) App.canvasWidth / 2 - 50, (int) App.canvasHeight - 250));
+        }else{
+            imageViews.add(new Wall().initializeWalltop( 0, (int) App.canvasHeight - 100, (int) App.canvasWidth, 50));
+        }
+        if(isWestDoor()){
+            imageViews.add(new Door().initializeDoor( 0, (int) App.canvasHeight / 2));
+        }else{
+            imageViews.add(new Wall().initializeWall( 0, 0, 50, (int) App.canvasHeight));
+        }
+        
+        return imageViews;
+
+
+    } */
+
+
+
+     public void initializeBorder() {
+        for (int indexX = 0; indexX < mapX; indexX++) {
+            HashMap<Direction, Boolean> isADoor = new HashMap<>();
+            isADoor.put(Direction.NORTH, false);
+
+            if (indexX == 0) {
+                isADoor.put(Direction.WEST, false);
+                Random rd = new Random();
+                int test = rd.nextInt(2);
+                if (test == 1) {
+                    isADoor.put(Direction.SOUTH, true);
+                    isADoor.put(Direction.EAST, new Random().nextBoolean());
+                }
+                if (test == 0) {
+                    isADoor.put(Direction.EAST, true);
+                    isADoor.put(Direction.SOUTH, new Random().nextBoolean());
+                }
+
+            } else if (indexX == mapX - 1) {
+                isADoor.put(Direction.WEST, rooms[indexX - 1][0].isEastDoor());
+                isADoor.put(Direction.EAST, false);
+                isADoor.put(Direction.SOUTH, true);
+
+            } else {
+                isADoor.put(Direction.WEST, rooms[indexX - 1][0].isEastDoor());
+                Random rd = new Random();
+                int test = rd.nextInt(2);
+
+                if (test == 0) {
+                    isADoor.put(Direction.EAST, true);
+                    isADoor.put(Direction.SOUTH, new Random().nextBoolean());
+                }
+                if (test == 1) {
+                    isADoor.put(Direction.EAST, new Random().nextBoolean());
+                    isADoor.put(Direction.SOUTH, true);
+                }
+
+            }
+            if (indexX != 0) {
+                isADoor.put(Direction.WEST, rooms[indexX - 1][0].areDoors.get(Direction.EAST));
+            }
+
+            rooms[indexX][0] = new Room(isADoor);
+
+        }
+
+        for (int indexY = 1; indexY < mapY; indexY++) {
+            HashMap<Direction, Boolean> isADoor = new HashMap<>();
+            isADoor.put(Direction.WEST, false);
+            isADoor.put(Direction.NORTH, rooms[0][indexY - 1].areDoors.get(Direction.SOUTH));
+
+            Random rd = new Random();
+            int test = rd.nextInt(2);
+
+            if (test == 0) {
+                isADoor.put(Direction.EAST, new Random().nextBoolean());
+                isADoor.put(Direction.SOUTH, true);
+            }
+            if (test == 1) {
+                isADoor.put(Direction.EAST, true);
+                isADoor.put(Direction.SOUTH, new Random().nextBoolean());
+
+            }
+
+            if (indexY == mapX - 1) {
+                isADoor.put(Direction.SOUTH, false);
+                isADoor.put(Direction.EAST, true);
+
+            }
+            this.rooms[0][indexY] = new Room(isADoor);
+        }
+    }
